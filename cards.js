@@ -2,9 +2,14 @@
   "use strict";
 
   const container = document.querySelector(".vortex");
-  if (!container || !window.gsap || !window.Physics2DPlugin) return;
+  if (!container) return;
+  if (!window.gsap) {
+    console.error("Jackers animation: GSAP failed to load.");
+    return;
+  }
 
-  gsap.registerPlugin(Physics2DPlugin);
+  const hasPhysics = Boolean(window.Physics2DPlugin);
+  if (hasPhysics) gsap.registerPlugin(Physics2DPlugin);
 
   const random = (min, max) => gsap.utils.random(min, max);
   const suits = [
@@ -65,17 +70,26 @@
       scale: random(0.88, 1.08)
     });
 
-    gsap.to(card, {
+    const motion = {
       duration,
-      physics2D: {
-        velocity: random(38, 64),
-        angle: random(84, 96),
-        gravity: random(13, 19)
-      },
       rotation: `+=${rotation}`,
       ease: "none",
       onComplete: () => dropCard(card)
-    });
+    };
+
+    if (hasPhysics) {
+      motion.physics2D = {
+        velocity: random(38, 64),
+        angle: random(84, 96),
+        gravity: random(13, 19)
+      };
+    } else {
+      // Graceful fallback: preserve the falling effect if the bonus plugin CDN is unavailable.
+      motion.y = window.innerHeight + cardHeight + random(30, 180);
+      motion.ease = "power1.in";
+    }
+
+    gsap.to(card, motion);
   }
 
   for (let i = 0; i < cardCount; i += 1) createCard(i);
