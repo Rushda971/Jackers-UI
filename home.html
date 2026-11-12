@@ -27,6 +27,8 @@ body{
 }
 
 .app{
+  position:relative;
+  z-index:1;
   max-width:1000px;
   margin:0 auto;
   padding:24px;
@@ -162,6 +164,7 @@ body{
 /* NAVIGATION BAR */
 .navbar{
   position:fixed;
+  z-index:10;
   bottom:0;
   left:0;
   width:100%;
@@ -257,10 +260,9 @@ body{
   <div class="nav-item" onclick="location.href='settings.html'">Settings</div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/Physics2DPlugin.min.js"></script>
 <script src="cards.js"></script>
-<script>
-initFallingCards();
-</script>
 
 </body>
 </html>
